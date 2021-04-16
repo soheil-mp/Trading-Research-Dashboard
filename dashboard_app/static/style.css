@@ -7,14 +7,15 @@ body {
     background: #ee0979;
    /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #ff6a00, #ee0979);
+    /* background: -webkit-linear-gradient(to right, #292929, #464545); */
    /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #ff6a00, #ee0979);
+    /* background: linear-gradient(to right, #292929, #464545); */
 
     min-height: 40vh;
 
     color: white;
 }
-
 
 .buttons {
 
@@ -28,9 +29,9 @@ body {
 .big-button {
 
     background: #ee0979;
-   /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #ff6a00, #ee0979);
-   /* Chrome 10-25, Safari 5.1-6 */
+    /* fallback for old browsers */
+    background: linear-gradient(to right, #ff6a00, #ee0979);
+    /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #ff6a00, #ee0979);
 
     border-radius: 20%;
@@ -56,7 +57,7 @@ body {
     transform: translateY(-5px);
 }
 .big-button .big-button__title {
-    font-size: 5vh;
+    font-size: 4vh;
     text-align: center;
     transition: transform 350ms;
     user-select: none;
