@@ -1,4 +1,5 @@
 
+{% load static %}
 
 <html>
 
@@ -13,8 +14,7 @@
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
       <!-- Local Style Sheet -->
-      {% load static %}
-      <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'dashboard_app/style.css' %}">
 
     </head>
 
@@ -37,41 +37,50 @@
       <!-- ======================================================================== -->
       <div class="buttons">
 
-        <div class="big-button">
-          <div class="big-button__title">
-            Data Construction
+        <a href="{% url 'data_gathering' %}" style="text-decoration:none" >
+          <div class="big-button">
+            <div class="big-button__title">
+              Data Construction
+            </div>
+            <div class="big-button__icon">
+              <i class="fas fa-plus"></i>
+            </div>
           </div>
-          <div class="big-button__icon">
-            <i class="fas fa-plus"></i>
-          </div>
-        </div>
+        </a>
         
-        <div class="big-button">
-          <div class="big-button__title">
-            Portfolio Research
-          </div>
-              <div class="big-button__icon">
-              <i class="fas fa-clipboard-check"></i>
+        <a href="{% url 'portfolio_selection' %}" style="text-decoration:none">
+          <div class="big-button">
+            <div class="big-button__title">
+              Portfolio Research
             </div>
-        </div>
+                <div class="big-button__icon">
+                <i class="fas fa-clipboard-check"></i>
+              </div>
+          </div>
+        </a>
 
-        <div class="big-button">
-          <div class="big-button__title">
-            RL-Based Trading
-          </div>
-              <div class="big-button__icon">
-              <i class="fas fa-robot"></i>
+        <a href="{% url 'rl_trading' %}" style="text-decoration:none">
+          <div class="big-button">
+            <div class="big-button__title">
+              RL-Based Trading
             </div>
-        </div>
+                <div class="big-button__icon">
+                <i class="fas fa-robot"></i>
+              </div>
+          </div>
+        </a>
 
-        <div class="big-button">
-          <div class="big-button__title">
-            Strategy-Based Trading
-          </div>
-              <div class="big-button__icon">
-              <i class="fas fa-chart-bar"></i>
+        <a href="{% url 'strategy_trading' %}"style="text-decoration:none" >
+          <div class="big-button">
+            <div class="big-button__title">
+              Strategy-Based Trading
             </div>
-        </div>
+                <div class="big-button__icon">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+          </div>
+        </a>
+
       </div>
 
 

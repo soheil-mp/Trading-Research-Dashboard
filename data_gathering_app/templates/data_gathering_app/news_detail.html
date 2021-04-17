@@ -1,0 +1,36 @@
+
+<html>
+
+    <head>
+        <!-- Boostrap  -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    </head>
+
+    <body>
+
+        <!-- Container -->
+        <div class="container mt-5">
+
+            <!-- News title -->
+            <h1 class="mb-4">{{ i_news.title }}</h1>
+
+            <!-- News Source -->
+            <p class="mb-3"><strong><a href="{{ i_news.url }}" style="text-decoration:none;">Source: {{ i_news.source }}</a></strong></p>
+
+            <!-- News date of published -->
+            <p><strong>{{i_news.date_and_time}}</strong></p>
+
+            <!-- News article -->
+            <p class="mt-4 mb-5">{{ i_news.article }}</p>
+
+        </div>
+
+    </body>
+
+</html>
