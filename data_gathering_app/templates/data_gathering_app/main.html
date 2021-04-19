@@ -1,6 +1,4 @@
 
-{% load static %}
-
 <html>
 
     <head>
@@ -14,7 +12,8 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
         <!-- Local Style Sheet -->
-        <link rel="stylesheet" type="text/css" href="{% static 'data_gathering_app/style.css' %}">
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'style_data_gathering.css' %}">
 
     </head>
 
@@ -33,28 +32,34 @@
             <br>
 
             <!-- News table -->
-            <table>
+            <table class="rwd-table">
 
                 <!-- Table heading -->
                 <tr>
-                  <th>News Title</th>
-                  <th>Source</th> 
-                  <th>Published Date</th>
+                    <th>News Title</th>
+                    <th>Title Sentiment</th>
+                    <th>Article Sentiment</th>
+                    <th>Source</th> 
+                    <th>Published Date</th>
                 </tr>
 
                 <!-- Loop over the news detail -->
-                {% for i_news in news %}
+                {% for index, row in news_df.iterrows %}
 
                     <!-- Table rows -->
                     <tr>
-                        <!-- Add news title + source + date -->
-                        <td><a href="{% url 'news_detail' i_news.id %}" style="text-decoration:none;">{{ i_news.title }}</a></td>
-                        <td>{{ i_news.source }}</td> 
-                        <td>{{ i_news.date_and_time }}</td>
-                    </tr>
-                {% endfor %}
 
-              </table>
+                        <!-- Add news title + source + date -->
+                        <td><a href="{% url 'news_detail' row.id %}" style="text-decoration:none;">{{ row.title }}</a></td>
+                        <td>{{ row.sentiment_title }}</td>
+                        <td>{{ row.sentiment_article }}</td>
+                        <td>{{ row.source }}</td> 
+                        <td>{{ row.date_and_time }}</td>
+
+                    </tr>
+
+                {% endfor %}
+            </table>
 
             <!-- ================================================================== -->
 
@@ -65,7 +70,7 @@
             <h4 class="mt-5">Company Earning</h4>
             <br>
 
-            <table>
+            <table class="rwd-table">
                 <tr>
                     <th>Rank</th>
                     <th>Company Name</th>
@@ -94,7 +99,7 @@
             <h4 class="mt-5">Viral Stocks in Twitter, Reddit.</h4>
             <br>
 
-            <table>
+            <table class="rwd-table">
                 <tr>
                     <th>Rank</th>
                     <th>Stock Name</th>
