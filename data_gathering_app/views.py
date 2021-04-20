@@ -5,6 +5,7 @@ from django.http import HttpResponse, Http404
 from django_pandas.io import read_frame
 from .models import News
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import PegasusTokenizer, PegasusForConditionalGeneration, TFPegasusForConditionalGeneration
 import torch
 
 
@@ -20,37 +21,61 @@ def main(request):
     # Add new columns
     df["sentiment_title"] = ""
     df["sentiment_article"] = ""
+    df["sentiment_article_summary"] = ""
+    df["sentiment_final"] = ""
+    df["article_summary"] = ""
 
     # Initialize the sentiment analysis model (i.e. FinBERT)
     tokenizer_sentiment = AutoTokenizer.from_pretrained("ProsusAI/finbert")
     model_sentiment = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
 
+    # Initialize the summarizer model
+    model_name = "human-centered-summarization/financial-summarization-pegasus"
+    tokenizer_summarize = PegasusTokenizer.from_pretrained(model_name)
+    model_summarize = PegasusForConditionalGeneration.from_pretrained(model_name)
+
     # Classes for prediction
-    classes = ['positive','negative','neutral']
+    classes = ['Good News 👍','Bad News 👎','Neutral News 🤏']
 
     # Loop over each rows in the dataframe
     for index, row in df.iterrows():
 
-        # Get the news title
-        title = row["title"]
-
         # Predict the sentiment for title
+        title = row["title"]
         result_title = torch.softmax(model_sentiment(**tokenizer_sentiment(title, return_tensors="pt")).logits, dim=1).tolist()[0]
-        result_title = [[index, i_num] for index, i_num in enumerate(result_title) if i_num==max(result_title)][0]
-        result_title = "{}: {}%".format(classes[result_title[0]], int(round(result_title[1]*100)))
-
-        # Get the article + summarize it 
-        article = row["article"]
-        article = article[:2000]
+        result_title_final = [[index, i_num] for index, i_num in enumerate(result_title) if i_num==max(result_title)][0]
+        result_title_final = "{}: {}%".format(classes[result_title_final[0]], int(round(result_title_final[1]*100)))
+        df.loc[index, "sentiment_title"] = result_title_final
 
         # Predict the sentiment for article
-        result_article = torch.softmax(model_sentiment(**tokenizer_sentiment(article, return_tensors="pt")).logits, dim=1).tolist()[0]
-        result_article = [[index, i_num] for index, i_num in enumerate(result_article) if i_num==max(result_article)][0]
-        result_article = "{}: {}%".format(classes[result_article[0]], int(round(result_article[1]*100)))
+        article = row["article"]
+        result_article = torch.softmax(model_sentiment(**tokenizer_sentiment(article, return_tensors="pt", max_length=512, truncation=True)).logits, dim=1).tolist()[0]
+        result_article_final = [[index, i_num] for index, i_num in enumerate(result_article) if i_num==max(result_article)][0]
+        result_article_final = "{}: {}%".format(classes[result_article_final[0]], int(round(result_article_final[1]*100)))
+        df.loc[index, "sentiment_article"] = result_article_final
 
-        # Update the values
-        df.loc[index, "sentiment_title"] = result_title
-        df.loc[index, "sentiment_article"] = result_article
+        # Summarize the article
+        article = row["article"]
+        article_summary = model_summarize.generate(tokenizer_summarize(article, return_tensors="pt", max_length=512, truncation=True).input_ids,  # TODO: We are truncating the article by 512 tokens (model restriction), later use a better model.
+                                                    max_length=100, 
+                                                    num_beams=5, 
+                                                    early_stopping=True)
+        article_summary = tokenizer_summarize.decode(article_summary[0], skip_special_tokens=True)  
+        df.loc[index, "article_summary"] = article_summary
+
+        # Predict the sentiment for article summary
+        result_article_summary = torch.softmax(model_sentiment(**tokenizer_sentiment(article_summary, return_tensors="pt")).logits, dim=1).tolist()[0]
+        result_article_summary_final = [[index, i_num] for index, i_num in enumerate(result_article_summary) if i_num==max(result_article_summary)][0]
+        result_article_summary_final = "{}: {}%".format(classes[result_article_summary_final[0]], int(round(result_article_summary_final[1]*100)))
+        df.loc[index, "sentiment_article_summary"] = result_article_summary_final
+
+        # Get the final sentiment
+        final_result = [(result_article[i]+result_title[i]+result_article_summary[i])/3 for i in range(3)]
+        final_result = [[index, i_num] for index, i_num in enumerate(final_result) if i_num==max(final_result)][0]
+        final_result = "{}: {}%".format(classes[final_result[0]], int(round(final_result[1]*100)))
+        df.loc[index, "sentiment_final"] = final_result
+
+
 
     # Send the request + data to "home.html" template
     return render(request, "data_gathering_app/main.html", {"news_df": df})

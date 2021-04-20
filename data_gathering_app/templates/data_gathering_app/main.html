@@ -37,8 +37,11 @@
                 <!-- Table heading -->
                 <tr>
                     <th>News Title</th>
+                    <th>Article Summary</th>
+                    <th>Sentiment</th>
                     <th>Title Sentiment</th>
                     <th>Article Sentiment</th>
+                    <th>Article Summary Sentiment</th>
                     <th>Source</th> 
                     <th>Published Date</th>
                 </tr>
@@ -50,9 +53,12 @@
                     <tr>
 
                         <!-- Add news title + source + date -->
-                        <td><a href="{% url 'news_detail' row.id %}" style="text-decoration:none;">{{ row.title }}</a></td>
+                        <td><a href="{% url 'news_detail' row.id %}" style="text-decoration:none; color:white;">{{ row.title }}</a></td>
+                        <td>{{ row.article_summary }}</td>
+                        <td>{{ row.sentiment_final }}</td>
                         <td>{{ row.sentiment_title }}</td>
                         <td>{{ row.sentiment_article }}</td>
+                        <td>{{ row.sentiment_article_summary }}</td>
                         <td>{{ row.source }}</td> 
                         <td>{{ row.date_and_time }}</td>
 
